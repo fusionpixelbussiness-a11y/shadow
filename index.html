@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shadow | Developer</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif;}
+body{background:#020611;color:white;overflow-x:hidden;}
+canvas{position:fixed;top:0;left:0;z-index:-1;}
+
+.cursor{
+  position:fixed;
+  width:200px;height:200px;
+  background:radial-gradient(circle,#00aaff55,transparent);
+  pointer-events:none;
+  transform:translate(-50%,-50%);
+}
+
+/* Navbar */
+nav{
+  position:fixed;width:100%;
+  display:flex;justify-content:space-between;
+  padding:15px 40px;
+  backdrop-filter:blur(15px);
+  background:rgba(0,170,255,0.05);
+}
+nav h1{color:#00aaff;text-shadow:0 0 10px #00aaff;}
+nav a{color:white;margin-left:20px;text-decoration:none;}
+nav a:hover{color:#00aaff;}
+
+/* Hero */
+.hero{
+  height:100vh;
+  display:flex;flex-direction:column;
+  justify-content:center;align-items:center;
+  text-align:center;
+}
+.hero h2{font-size:55px;}
+.hero span{color:#00aaff;text-shadow:0 0 20px #00aaff;}
+
+#typing{color:#aaa;margin-top:10px;font-size:22px;}
+
+.btn{
+  margin-top:15px;
+  padding:12px 28px;
+  border:none;border-radius:30px;
+  background:#00aaff;color:white;
+  cursor:pointer;
+  transition:0.3s;
+}
+.btn:hover{
+  background:#0090dd;
+  box-shadow:0 0 20px #00aaff;
+}
+
+/* Sections */
+section{padding:80px 40px;}
+.title{color:#00aaff;margin-bottom:20px;}
+
+.cards{display:flex;flex-wrap:wrap;gap:20px;}
+
+.card{
+  flex:1 1 250px;
+  background:rgba(0,170,255,0.05);
+  backdrop-filter:blur(15px);
+  padding:20px;border-radius:15px;
+  transition:0.3s;
+}
+.card:hover{
+  transform:translateY(-10px);
+  box-shadow:0 0 25px #00aaff;
+}
+
+footer{text-align:center;padding:20px;background:#020611;}
+</style>
+</head>
+
+<body>
+
+<canvas id="canvas"></canvas>
+<div class="cursor" id="cursor"></div>
+
+<!-- Navbar -->
+<nav>
+  <h1>SHADOW</h1>
+  <div>
+    <a href="#home">Home</a>
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="hero" id="home">
+  <h2>Hi, I'm <span>Shadow</span></h2>
+  <div id="typing"></div>
+
+  <button class="btn" onclick="window.open('#')">Contact Me</button>
+</div>
+
+<!-- About -->
+<section id="about">
+  <h2 class="title">About Me</h2>
+  <div class="card">
+    <p>
+      I'm Shadow, a professional Website Developer and Minecraft Developer.
+      I build modern websites and high-performance Minecraft servers
+      with smooth gameplay and custom features.
+    </p>
+  </div>
+</section>
+
+<!-- Skills -->
+<section id="skills">
+  <h2 class="title">Skills</h2>
+  <div class="cards">
+    <div class="card"><h3>HTML / CSS</h3><p>Advanced UI Design</p></div>
+    <div class="card"><h3>JavaScript</h3><p>Animations & Effects</p></div>
+    <div class="card"><h3>Minecraft Dev</h3><p>Plugins, PvP, Systems</p></div>
+  </div>
+</section>
+
+<!-- Projects -->
+<section id="projects">
+  <h2 class="title">Projects</h2>
+  <div class="cards">
+    <div class="card"><h3>Custom Websites</h3></div>
+    <div class="card"><h3>Minecraft Servers</h3></div>
+    <div class="card"><h3>Plugin Setups</h3></div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+  <h2 class="title">Contact</h2>
+  <button class="btn" onclick="window.open('#')">Discord</button>
+</section>
+
+<footer>© 2026 Shadow</footer>
+
+<script>
+/* Typing */
+const words=["Website Developer","Minecraft Developer","UI Designer"];
+let i=0,j=0,del=false;
+function type(){
+  let w=words[i];
+  document.getElementById("typing").textContent=w.substring(0,j);
+  if(!del && j++===w.length){del=true;setTimeout(type,1000);return;}
+  if(del && j--===0){del=false;i=(i+1)%words.length;}
+  setTimeout(type,del?50:100);
+}
+type();
+
+/* Cursor Glow */
+document.addEventListener("mousemove",e=>{
+  let c=document.getElementById("cursor");
+  c.style.left=e.clientX+"px";
+  c.style.top=e.clientY+"px";
+});
+
+/* Particles */
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+let particles=[];
+for(let i=0;i<80;i++){
+  particles.push({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    vx:(Math.random()-0.5),
+    vy:(Math.random()-0.5)
+  });
+}
+
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  particles.forEach((p,i)=>{
+    p.x+=p.vx;
+    p.y+=p.vy;
+
+    if(p.x<0||p.x>canvas.width) p.vx*=-1;
+    if(p.y<0||p.y>canvas.height) p.vy*=-1;
+
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,2,0,Math.PI*2);
+    ctx.fillStyle="#00aaff";
+    ctx.fill();
+
+    for(let j=i+1;j<particles.length;j++){
+      let dx=p.x-particles[j].x;
+      let dy=p.y-particles[j].y;
+      let dist=Math.sqrt(dx*dx+dy*dy);
+
+      if(dist<120){
+        ctx.beginPath();
+        ctx.moveTo(p.x,p.y);
+        ctx.lineTo(particles[j].x,particles[j].y);
+        ctx.strokeStyle="rgba(0,170,255,0.2)";
+        ctx.stroke();
+      }
+    }
+  });
+
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+
+</body>
+</html>
